@@ -1,0 +1,1 @@
+PLUGINS = ['netbox_bgp','netbox_topology_views']
