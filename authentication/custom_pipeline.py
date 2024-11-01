@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group
+from netbox.authentication import Group
 
 class AuthFailed(Exception):
     pass
@@ -8,12 +8,10 @@ def add_groups(response, user, backend, *args, **kwargs):
         groups = response['groups']
     except KeyError:
         pass
-    
-    print(response)
 
     for group in groups:
         group, created = Group.objects.get_or_create(name=group)
-        group.user_set.add(user)
+        user.groups.add(group)
 
 def remove_groups(response, user, backend, *args, **kwargs):
     try:
@@ -27,7 +25,7 @@ def remove_groups(response, user, backend, *args, **kwargs):
 
     for delete_group in delete_groups:
         group = Group.objects.get(name=delete_group)
-        group.user_set.remove(user)
+        user.groups.remove(group)
 
 
 def set_roles(response, user, backend, *args, **kwargs):
