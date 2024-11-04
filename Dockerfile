@@ -1,4 +1,4 @@
-FROM ghcr.io/netbox-community/netbox:v4.1.5
+FROM ghcr.io/netbox-community/netbox:v4.1.6
 
 ENV LANG=C.utf8 \
     PATH=/opt/netbox/venv/bin:$PATH \
