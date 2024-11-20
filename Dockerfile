@@ -6,7 +6,8 @@ ENV LANG=C.utf8 \
 
 COPY configuration/plugins.py /etc/netbox/config/plugins.py
 COPY configuration/extra.py /etc/netbox/config/extra.py
-COPY configuration/ngcauth.py /etc/netbox/config/ngcauth.py
+COPY configuration/extra.py /etc/netbox/config/extra.py
+COPY configuration/logging.py /etc/netbox/config/logging.py
 COPY configuration/local_settings.py /opt/netbox/netbox/netbox/local_settings.py
 COPY authentication/custom_pipeline.py /opt/netbox/netbox/netbox/custom_pipeline.py
 COPY requirements.txt /tmp/requirements.txt
