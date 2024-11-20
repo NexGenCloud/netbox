@@ -6,7 +6,7 @@ ENV LANG=C.utf8 \
 
 COPY configuration/plugins.py /etc/netbox/config/plugins.py
 COPY configuration/extra.py /etc/netbox/config/extra.py
-COPY configuration/extra.py /etc/netbox/config/extra.py
+COPY configuration/ngcauth.py /etc/netbox/config/ngcauth.py
 COPY configuration/logging.py /etc/netbox/config/logging.py
 COPY configuration/local_settings.py /opt/netbox/netbox/netbox/local_settings.py
 COPY authentication/custom_pipeline.py /opt/netbox/netbox/netbox/custom_pipeline.py
@@ -15,6 +15,7 @@ COPY entrypoint.sh /opt/netbox/entrypoint.sh
 
 RUN /opt/netbox/venv/bin/python -m pip install --upgrade -r /tmp/requirements.txt && \
     mkdir -p $TOPOLOGY_STATIC/img && chown unit:root -R $TOPOLOGY_STATIC && \
+    mkdir -p /opt/netbox/netbox/static/debug_toolbar && chown unit:root /opt/netbox/netbox/static/debug_toolbar && \
     chown unit:root /opt/netbox/entrypoint.sh; chmod +x /opt/netbox/entrypoint.sh && \
     sed -i 's/OpenID Connect/NexGen Cloud Login/g' /opt/netbox/netbox/netbox/authentication/__init__.py && \
     rm -rf /tmp/requirements.txt
