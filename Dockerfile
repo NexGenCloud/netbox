@@ -1,4 +1,4 @@
-FROM ghcr.io/netbox-community/netbox:v4.1.6
+FROM ghcr.io/netbox-community/netbox:v4.4.7
 
 ENV LANG=C.utf8 \
     PATH=/opt/netbox/venv/bin:$PATH \
@@ -13,7 +13,7 @@ COPY authentication/custom_pipeline.py /opt/netbox/netbox/netbox/custom_pipeline
 COPY requirements.txt /tmp/requirements.txt
 COPY entrypoint.sh /opt/netbox/entrypoint.sh
 
-RUN /opt/netbox/venv/bin/python -m pip install --upgrade -r /tmp/requirements.txt && \
+RUN /usr/local/bin/uv pip install -r /tmp/requirements.txt && \
     mkdir -p $TOPOLOGY_STATIC/img && chown unit:root -R $TOPOLOGY_STATIC && \
     mkdir -p /opt/netbox/netbox/static/debug_toolbar && chown unit:root /opt/netbox/netbox/static/debug_toolbar && \
     chown unit:root /opt/netbox/entrypoint.sh; chmod +x /opt/netbox/entrypoint.sh && \

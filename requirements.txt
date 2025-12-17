@@ -1,5 +1,5 @@
 social-auth-core[openidconnect]
-netbox-bgp==0.14.0
-netbox-topology-views==4.1.0
-netboxlabs-netbox-branching==0.5.2
+netbox-bgp==0.17.0
+netbox-topology-views==4.4.0
+netboxlabs-netbox-branching==0.7.2
 python-jose
