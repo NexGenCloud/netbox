@@ -1,42 +1,23 @@
 from netbox.authentication import Group
 
-class AuthFailed(Exception):
-    pass
 
-def add_groups(response, user, backend, *args, **kwargs):
-    try:
-        groups = response['groups']
-    except KeyError:
-        pass
-
-    for group in groups:
-        group, created = Group.objects.get_or_create(name=group)
-        user.groups.add(group)
-
-def remove_groups(response, user, backend, *args, **kwargs):
-    try:
-        groups = response['groups']
-    except KeyError:
+def sync_groups(response, user, backend, *args, **kwargs):
+    """Sync user's NetBox groups to match the OIDC provider response."""
+    groups = response.get('groups')
+    if groups is None:
         user.groups.clear()
-        pass
+        return
 
-    user_groups = [item.name for item in user.groups.all()]
-    delete_groups = list(set(user_groups) - set(groups))
+    # Ensure all OIDC groups exist in NetBox
+    for group_name in groups:
+        Group.objects.get_or_create(name=group_name)
 
-    for delete_group in delete_groups:
-        group = Group.objects.get(name=delete_group)
-        user.groups.remove(group)
+    # Atomically set user's groups to exactly match the OIDC response
+    user.groups.set(Group.objects.filter(name__in=groups))
 
 
 def set_roles(response, user, backend, *args, **kwargs):
-    user.is_superuser = False
-    user.is_staff = False
-    try:
-        groups = response['groups']
-    except KeyError:
-        user.save()
-        pass
-
-    user.is_superuser = True if 'superusers' in groups else False
-    user.is_staff = True if 'staff' in groups else False
+    """Set superuser flag based on OIDC group membership."""
+    groups = response.get('groups', [])
+    user.is_superuser = 'superusers' in groups
     user.save()

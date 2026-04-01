@@ -1,6 +1,4 @@
 ---
-version: '3.4'
-
 services:
 
   netbox:
@@ -12,9 +10,9 @@ services:
       - redis
       - redis-cache
     env_file: env/netbox.env
-    user: 'unit:root'
+    user: 'netbox:root'
     healthcheck:
-      start_period: 90s
+      start_period: 600s
       timeout: 3s
       interval: 15s
       test: curl -f http://localhost:8080/login/ || exit 1
@@ -28,7 +26,7 @@ services:
   netbox-worker:
     build: ./
     env_file: env/netbox.env
-    user: 'unit:root'
+    user: 'netbox:root'
     depends_on:
       netbox:
         condition: service_healthy
