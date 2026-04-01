@@ -1,8 +1,4 @@
-FROM ghcr.io/netbox-community/netbox:v4.4.7
-
-ENV LANG=C.utf8 \
-    PATH=/opt/netbox/venv/bin:$PATH \
-    TOPOLOGY_STATIC=/opt/netbox/netbox/static/netbox_topology_views
+FROM ghcr.io/netbox-community/netbox:v4.5.6
 
 COPY configuration/plugins.py /etc/netbox/config/plugins.py
 COPY configuration/extra.py /etc/netbox/config/extra.py
@@ -11,15 +7,12 @@ COPY configuration/logging.py /etc/netbox/config/logging.py
 COPY configuration/local_settings.py /opt/netbox/netbox/netbox/local_settings.py
 COPY authentication/custom_pipeline.py /opt/netbox/netbox/netbox/custom_pipeline.py
 COPY requirements.txt /tmp/requirements.txt
-COPY entrypoint.sh /opt/netbox/entrypoint.sh
 
 RUN /usr/local/bin/uv pip install -r /tmp/requirements.txt && \
-    mkdir -p $TOPOLOGY_STATIC/img && chown unit:root -R $TOPOLOGY_STATIC && \
-    mkdir -p /opt/netbox/netbox/static/debug_toolbar && chown unit:root /opt/netbox/netbox/static/debug_toolbar && \
-    chown unit:root /opt/netbox/entrypoint.sh; chmod +x /opt/netbox/entrypoint.sh && \
-    sed -i 's/OpenID Connect/NexGen Cloud Login/g' /opt/netbox/netbox/netbox/authentication/__init__.py && \
-    rm -rf /tmp/requirements.txt
+    SECRET_KEY="build-only-dummy-key-not-used-at-runtime-minimum-50-chars" \
+      python manage.py collectstatic --no-input && \
+    sed -i 's/OpenID Connect/NexGen Cloud Login/g' \
+      /opt/netbox/netbox/netbox/authentication/__init__.py && \
+    rm -f /tmp/requirements.txt
 
-ENTRYPOINT [ "/usr/bin/tini", "--" ]
-
-CMD [ "/opt/netbox/entrypoint.sh" ]
+CMD [ "/opt/netbox/docker-entrypoint.sh", "/opt/netbox/launch-netbox.sh" ]
