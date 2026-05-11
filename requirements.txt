@@ -1,4 +1,4 @@
 social-auth-core[openidconnect]
 netbox-bgp==0.18.1
 netbox-topology-views==4.5.1
-netboxlabs-netbox-branching==0.8.3
+netboxlabs-netbox-branching==1.0.2
