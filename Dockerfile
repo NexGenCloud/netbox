@@ -1,4 +1,4 @@
-FROM ghcr.io/netbox-community/netbox:v4.5.6
+FROM ghcr.io/netbox-community/netbox:v4.5.10
 
 COPY configuration/plugins.py /etc/netbox/config/plugins.py
 COPY configuration/extra.py /etc/netbox/config/extra.py
