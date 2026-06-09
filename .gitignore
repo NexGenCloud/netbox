@@ -21,3 +21,7 @@ vendor/pkg/
 pyenv
 Vagrantfile
 *.env
+# Local DB dumps / scratch (prod data — do not commit)
+tmp/
+*.sql
+.serena/
